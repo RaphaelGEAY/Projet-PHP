@@ -86,3 +86,9 @@ sudo service apache2 restart
 ```
 http://localhost/phpmyadmin
 ```
+
+--------------------------------------------
+
+```
+sudo mysql -u root -p
+```
