@@ -1,11 +1,10 @@
 <?php
-// Démarre la session pour pouvoir la détruire
-session_start();
+declare(strict_types=1);
 
-// Vide toutes les données de session
+require_once __DIR__ . '/includes/bootstrap.php';
+
 $_SESSION = [];
 
-// Supprime le cookie de session si présent
 if (ini_get('session.use_cookies')) {
     $params = session_get_cookie_params();
     setcookie(
@@ -19,9 +18,7 @@ if (ini_get('session.use_cookies')) {
     );
 }
 
-// Détruit la session
 session_destroy();
 
-// Redirige vers la page de connexion
-header('Location: login.php');
+header('Location: ' . url('login.php'));
 exit;

@@ -1,94 +1,77 @@
-# Projet-PHP
+# AutoMarket - Projet final PHP E-Commerce
 
-```
-sudo apt-get install lamp-server^
-```
+Site e-commerce 100% PHP (sans framework backend) pour vendre/acheter des voitures, de l'entrée de gamme aux modèles de luxe.
 
-```
-sudo service apache2 start
-sudo service mysql start
-```
+## Fonctionnalités implémentées
 
-```
-sudo chown -R $USER:www-data /var/www/html/php_exam
-sudo chmod -R 755 /var/www/html/php_exam
-```
+- `register.php` : création de compte avec unicité `username` + `email` et connexion automatique.
+- `login.php` / `logout.php` : authentification.
+- `index.php` : home avec liste des annonces, tri et recherche.
+- `detail.php?id=...` : détail d'un article, ajout au panier.
+- `sell.php` : création d'article + stock.
+- `edit.php` : modification/suppression d'article (auteur ou admin uniquement, accès via `POST`).
+- `cart/index.php` : panier utilisateur (modifier quantité, supprimer, total).
+- `cart/validate.php` : confirmation commande, facturation, génération facture, vidage panier.
+- `account.php` / `account.php?user_id=...` :
+  - profil utilisateur,
+  - articles postés,
+  - achats et factures (pour son propre compte),
+  - modification infos + ajout de solde.
+- `admin/index.php` : tableau administrateur (gestion utilisateurs + articles).
 
-```
-http://localhost/php_exam
-```
+## Base de données
 
-```
-sudo apt install phpmyadmin
-```
+Le fichier **obligatoire pour le rendu** est fourni :
 
-```
-sudo mysql
-```
+- `php_exam_db.sql`
 
-```
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
-CREATE USER IF NOT EXISTS 'root'@'127.0.0.1' IDENTIFIED WITH mysql_native_password BY 'root';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
-EXIT;
-```
+Il contient :
+- schéma complet (`users`, `articles`, `cart`, `stock`, `invoice`, `invoice_items`),
+- contraintes d'intégrité,
+- données de démonstration (voitures pas chères à voiture à `1 000 000 000 €`).
 
-```
-sudo rm /etc/phpmyadmin/config.inc.php
-sudo nano /etc/phpmyadmin/config.inc.php
-```
+## Installation rapide (XAMPP/LAMP)
 
-```
-<?php
-/**
- * Configuration simplifiée pour WSL
- */
+1. Placer le dossier dans `htdocs/php_exam` (ou `/var/www/html/php_exam`).
+2. Créer la base via phpMyAdmin en important `php_exam_db.sql`.
+3. Vérifier la connexion DB dans `db.php`.
 
-// Charge la clé secrète pour les cookies
-if (file_exists('/var/lib/phpmyadmin/blowfish_secret.inc.php')) {
-    require('/var/lib/phpmyadmin/blowfish_secret.inc.php');
-}
+Configuration par défaut dans `db.php` :
 
-$i = 1; // ON INITIALISE LE SERVEUR 1
+- host: `127.0.0.1`
+- db: `php_exam_db`
+- user: `root`
+- pass: `root`
 
-/* Type d'authentification */
-$cfg['Servers'][$i]['auth_type'] = 'cookie';
+Vous pouvez aussi utiliser des variables d'environnement :
+- `DB_HOST`
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASS`
 
-/* Connexion via IP pour éviter les bugs de socket WSL */
-$cfg['Servers'][$i]['host'] = '127.0.0.1';
-$cfg['Servers'][$i]['compress'] = false;
-$cfg['Servers'][$i]['AllowNoPassword'] = false;
+## Comptes de démonstration
 
-/* Masquer le choix du serveur et les réglages inutiles au login */
-$cfg['DisplayServersList'] = false;
-$cfg['AllowArbitraryServer'] = false;
+- Admin
+  - email: `admin@automarket.local`
+  - mot de passe: `admin123`
 
-/* Réglages par défaut */
-$cfg['DefaultLang'] = 'fr';
-$cfg['ServerDefault'] = 1;
+- Utilisateur
+  - email: `seller@automarket.local`
+  - mot de passe: `user1234`
 
-/**
- * Répertoires pour charger/sauvegarder
- */
-$cfg['UploadDir'] = '';
-$cfg['SaveDir'] = '';
-```
+- Utilisateur
+  - email: `buyer@automarket.local`
+  - mot de passe: `user1234`
 
-```
-sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
-```
+## Arborescence principale
 
-```
-sudo service apache2 restart
-```
+- `includes/bootstrap.php` : chargement session + dépendances
+- `includes/helpers.php` : fonctions utilitaires (auth, redirect, format, etc.)
+- `includes/layout.php` : header/footer communs
+- `assets/style.css` : style global
 
-```
-http://localhost/phpmyadmin
-```
+## Notes
 
---------------------------------------------
-
-```
-sudo mysql -u root -p
-```
+- Backend uniquement en PHP natif.
+- Les pages protégées redirigent vers la connexion si nécessaire.
+- Les mots de passe sont hashés en bcrypt.

@@ -1,27 +1,25 @@
 <?php
-// db.php
+declare(strict_types=1);
 
-/* CONFIGURATION DE LA CONNEXION
-   -----------------------------
-   Note pour le rendu : 
-   Sur ma machine WSL, j'utilise 'admin' et '127.0.0.1'.
-   Si vous testez sur XAMPP, changez $host en 'localhost' et $user/$pass en 'root'.
-*/
+$host = getenv('DB_HOST') ?: '127.0.0.1';
+$dbName = getenv('DB_NAME') ?: 'php_exam_db';
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') ?: 'root';
 
-$host = '127.0.0.1';   // Force l'IP pour que ça marche sur WSL
-$db   = 'php_exam_db'; // Le nom imposé par le sujet
-$user = 'root';       // Ton utilisateur créé tout à l'heure
-$pass = 'root'; // Ton mot de passe défini tout à l'heure
+$dsn = "mysql:host={$host};dbname={$dbName};charset=utf8mb4";
 
 try {
-    // On crée la connexion
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
-    
-    // On active les erreurs pour voir les problèmes SQL
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // echo "Connexion réussie !"; // Décommenter pour tester
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ]);
 } catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
+    die('Erreur de connexion à la base de données: ' . $e->getMessage());
 }
-?>
+
+function db(): PDO
+{
+    global $pdo;
+    return $pdo;
+}

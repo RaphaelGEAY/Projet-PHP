@@ -1,51 +1,52 @@
 <?php
+declare(strict_types=1);
 
-// On démarre la session
-session_start();
-require_once 'db.php';
+require_once __DIR__ . '/includes/bootstrap.php';
 
-// Traitement du formulaire
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    $sql = "SELECT * FROM users WHERE email = :email";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':email' => $email]);
-    $user = $stmt->fetch(); // On récupère la ligne correspondante
-
-    // 2. On vérifie si l'utilisateur existe ET si le mot de passe est bon
-    // password_verify compare le texte clair avec le "hachis" (hash) de la base
-    if ($user && password_verify($password, $user['password'])) {
-
-        // 4. Connecter automatiquement l'utilisateur
-        $_SESSION['user_id'] = $user["id"];
-        $_SESSION['email'] = $user["email"];
-        $_SESSION['role'] = $user["role"];
-
-        // Redirection vers l'accueil
-        header('Location: index.php');
-        exit;
-    } else {
-        $error = "Identifiants invalides.";
-    }
+if (is_logged_in()) {
+    redirect('index.php');
 }
-?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Connexion</title>
-</head>
-<body>
+$error = null;
+$email = '';
+
+if (is_post()) {
+    $email = post_string('email');
+    $password = (string) ($_POST['password'] ?? '');
+
+    $stmt = db()->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
+    $stmt->execute(['email' => $email]);
+    $user = $stmt->fetch();
+
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = (int) $user['id'];
+        current_user(true);
+        set_flash('success', 'Connexion réussie.');
+        redirect('index.php');
+    }
+
+    $error = 'Identifiants invalides.';
+}
+
+render_header('Connexion');
+?>
+<div class="form-card">
     <h1>Connexion</h1>
-    <?php if (isset($error)) echo "<p style='color:red'>$error</p>"; ?>
-    
-    <form method="POST">
-        <input type="email" name="email" placeholder="Email" required><br>
-        <input type="password" name="password" placeholder="Mot de passe" required><br>
+
+    <?php if ($error): ?>
+        <div class="flash flash-error"><?= e($error) ?></div>
+    <?php endif; ?>
+
+    <form method="post">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" name="email" required value="<?= e($email) ?>">
+
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" name="password" required>
+
         <button type="submit">Se connecter</button>
     </form>
-</body>
-</html>
+
+    <p>Pas encore de compte ? <a href="<?= e(url('register.php')) ?>">Inscrivez-vous</a>.</p>
+</div>
+<?php render_footer(); ?>
