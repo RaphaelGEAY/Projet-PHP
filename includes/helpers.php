@@ -103,6 +103,24 @@ function format_price(float|string $amount): string
     return number_format((float) $amount, 2, ',', ' ') . ' €';
 }
 
+function media_src(null|string $value, string $fallback = ''): string
+{
+    $src = trim((string) $value);
+    if ($src === '') {
+        return $fallback;
+    }
+
+    if (preg_match('#^(https?:)?//#i', $src) === 1 || str_starts_with($src, 'data:image/')) {
+        return $src;
+    }
+
+    if (str_starts_with($src, '/')) {
+        return $src;
+    }
+
+    return url($src);
+}
+
 function post_string(string $key): string
 {
     return trim((string) ($_POST[$key] ?? ''));

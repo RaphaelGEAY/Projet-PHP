@@ -79,7 +79,7 @@ render_header('Détail article');
 <article class="card">
     <img
         class="car-image"
-        src="<?= e($article['image_url'] ?: 'https://picsum.photos/900/450') ?>"
+        src="<?= e(media_src($article['image_url'] ?? '', 'https://picsum.photos/900/450')) ?>"
         alt="<?= e($article['title']) ?>"
     >
 

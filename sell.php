@@ -88,8 +88,8 @@ render_header('Mettre en vente');
         <label for="stock_quantity">Stock</label>
         <input id="stock_quantity" name="stock_quantity" type="number" min="0" step="1" required value="<?= e($values['stock_quantity']) ?>">
 
-        <label for="image_url">Image (URL)</label>
-        <input id="image_url" name="image_url" type="url" value="<?= e($values['image_url']) ?>" placeholder="https://...">
+        <label for="image_url">Image (URL ou chemin local)</label>
+        <input id="image_url" name="image_url" type="text" value="<?= e($values['image_url']) ?>" placeholder="https://... ou assets/images/ma-voiture.jpg">
 
         <button type="submit">Publier l'article</button>
     </form>
