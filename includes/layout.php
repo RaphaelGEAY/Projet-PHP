@@ -12,7 +12,7 @@ function render_header(string $title): void
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?= e($title) ?> | AutoMarket</title>
-        <link rel="stylesheet" href="<?= e(url('assets/style.css')) ?>">
+        <link rel="stylesheet" href="<?= e(asset_url('assets/style.css')) ?>">
     </head>
     <body>
         <header class="site-header">

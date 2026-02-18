@@ -18,6 +18,21 @@ function url(string $path = ''): string
     return ($base === '' ? '' : $base) . '/' . $normalized;
 }
 
+function asset_url(string $path): string
+{
+    $normalized = ltrim($path, '/');
+    $publicUrl = url($normalized);
+    $filePath = __DIR__ . '/../' . $normalized;
+
+    if (!is_file($filePath)) {
+        return $publicUrl;
+    }
+
+    $version = (string) filemtime($filePath);
+    $separator = str_contains($publicUrl, '?') ? '&' : '?';
+    return $publicUrl . $separator . 'v=' . $version;
+}
+
 function redirect(string $path): never
 {
     header('Location: ' . url($path));
@@ -115,10 +130,24 @@ function media_src(null|string $value, string $fallback = ''): string
     }
 
     if (str_starts_with($src, '/')) {
+        $base = defined('APP_BASE_PATH') ? rtrim(APP_BASE_PATH, '/') : '';
+        if ($base !== '' && str_starts_with($src, $base . '/')) {
+            $relative = ltrim(substr($src, strlen($base)), '/');
+            return asset_url($relative);
+        }
+
+        $normalized = ltrim($src, '/');
+        $filePath = __DIR__ . '/../' . $normalized;
+        if (is_file($filePath)) {
+            $version = (string) filemtime($filePath);
+            $separator = str_contains($src, '?') ? '&' : '?';
+            return $src . $separator . 'v=' . $version;
+        }
+
         return $src;
     }
 
-    return url($src);
+    return asset_url($src);
 }
 
 function post_string(string $key): string
