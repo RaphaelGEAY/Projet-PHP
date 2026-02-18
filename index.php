@@ -64,11 +64,14 @@ render_header('Accueil');
     <section class="grid">
         <?php foreach ($articles as $article): ?>
             <article class="card">
-                <img
-                    class="car-image"
-                    src="<?= e(media_src($article['image_url'] ?? '', 'https://picsum.photos/600/350?grayscale')) ?>"
-                    alt="<?= e($article['title']) ?>"
-                >
+                <?php $imageSrc = media_src($article['image_url'] ?? ''); ?>
+                <?php if ($imageSrc !== ''): ?>
+                    <img
+                        class="car-image"
+                        src="<?= e($imageSrc) ?>"
+                        alt="<?= e($article['title']) ?>"
+                    >
+                <?php endif; ?>
                 <h2><?= e($article['title']) ?></h2>
                 <p class="price"><?= e(format_price((float) $article['price'])) ?></p>
                 <p class="muted">Vendeur: <?= e($article['username']) ?></p>

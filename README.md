@@ -52,13 +52,12 @@ Vous pouvez aussi utiliser des variables d'environnement :
 ## Utiliser vos propres images
 
 Le projet accepte maintenant :
-- des URL externes (`https://...`)
-- des chemins locaux dans le projet (`assets/images/ma-voiture.jpg`)
+- uniquement des chemins locaux dans le projet (`assets/images/ma-voiture.jpg`)
 
 Workflow recommandé :
 1. Copier vos fichiers image dans `assets/images/`.
 2. Depuis `sell.php`, `edit.php` ou `account.php`, renseigner le champ image avec un chemin comme `assets/images/ma-voiture.jpg`.
-3. Ouvrir le site et vérifier l'affichage.
+3. Ouvrir le site et vérifier l'affichage (les fichiers manquants ou à `0` octet ne sont pas affichés).
 
 Pour remplacer rapidement les images de démo déjà en base :
 

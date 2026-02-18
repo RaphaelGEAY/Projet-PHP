@@ -40,12 +40,13 @@ if (!$canEdit) {
 }
 
 $error = null;
+$currentImagePath = (string) ($article['image_url'] ?? '');
 $values = [
     'title' => $article['title'],
     'description' => $article['description'],
     'price' => (string) $article['price'],
     'stock_quantity' => (string) $article['stock_quantity'],
-    'image_url' => $article['image_url'] ?? '',
+    'image_url' => $currentImagePath,
 ];
 
 if (isset($_POST['update_article'])) {
@@ -53,10 +54,12 @@ if (isset($_POST['update_article'])) {
     $values['description'] = post_string('description');
     $values['price'] = post_string('price');
     $values['stock_quantity'] = post_string('stock_quantity');
-    $values['image_url'] = post_string('image_url');
 
     $price = (float) $values['price'];
     $stock = (int) $values['stock_quantity'];
+    $removeImage = isset($_POST['remove_image']);
+    $uploadedImagePath = null;
+    $nextImagePath = $removeImage ? '' : $currentImagePath;
 
     if ($values['title'] === '') {
         $error = 'Le titre est obligatoire.';
@@ -67,6 +70,20 @@ if (isset($_POST['update_article'])) {
     } elseif ($stock < 0) {
         $error = 'Le stock ne peut pas être négatif.';
     } else {
+        $uploadResult = store_uploaded_car_image('image_file');
+        if ($uploadResult['error'] !== null) {
+            $error = (string) $uploadResult['error'];
+        } else {
+            $uploadedImagePath = $uploadResult['path'];
+            if ($uploadedImagePath !== null) {
+                $nextImagePath = (string) $uploadedImagePath;
+            }
+        }
+    }
+
+    if ($error === null) {
+        $values['image_url'] = $nextImagePath;
+
         db()->beginTransaction();
         try {
             $updateArticle = db()->prepare(
@@ -81,7 +98,7 @@ if (isset($_POST['update_article'])) {
                 'title' => $values['title'],
                 'description' => $values['description'],
                 'price' => $price,
-                'image_url' => $values['image_url'] !== '' ? $values['image_url'] : null,
+                'image_url' => $nextImagePath !== '' ? $nextImagePath : null,
                 'id' => $articleId,
             ]);
 
@@ -92,16 +109,25 @@ if (isset($_POST['update_article'])) {
             ]);
 
             db()->commit();
+
+            if ($nextImagePath !== $currentImagePath) {
+                delete_uploaded_car_image($currentImagePath);
+            }
+
             set_flash('success', 'Article mis à jour.');
             redirect('detail.php?id=' . $articleId);
         } catch (Throwable $exception) {
             db()->rollBack();
+            if ($uploadedImagePath !== null) {
+                delete_uploaded_car_image($uploadedImagePath);
+            }
             $error = 'Erreur pendant la mise à jour: ' . $exception->getMessage();
         }
     }
 }
 
 if (isset($_POST['delete_article'])) {
+    $imageToDelete = (string) ($article['image_url'] ?? '');
     db()->beginTransaction();
     try {
         $deleteCart = db()->prepare('DELETE FROM cart WHERE article_id = :article_id');
@@ -114,6 +140,7 @@ if (isset($_POST['delete_article'])) {
         $deleteArticle->execute(['id' => $articleId]);
 
         db()->commit();
+        delete_uploaded_car_image($imageToDelete);
         set_flash('success', 'Article supprimé.');
         redirect('index.php');
     } catch (Throwable $exception) {
@@ -131,7 +158,7 @@ render_header('Modifier article');
         <div class="flash flash-error"><?= e($error) ?></div>
     <?php endif; ?>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <input type="hidden" name="article_id" value="<?= e((string) $articleId) ?>">
 
         <label for="title">Titre</label>
@@ -146,8 +173,20 @@ render_header('Modifier article');
         <label for="stock_quantity">Stock</label>
         <input id="stock_quantity" name="stock_quantity" type="number" min="0" step="1" required value="<?= e($values['stock_quantity']) ?>">
 
-        <label for="image_url">Image (URL ou chemin local)</label>
-        <input id="image_url" name="image_url" type="text" value="<?= e($values['image_url']) ?>" placeholder="https://... ou assets/images/ma-voiture.jpg">
+        <?php $currentImageSrc = media_src($values['image_url'] ?? ''); ?>
+        <?php if ($currentImageSrc !== ''): ?>
+            <img class="car-image" src="<?= e($currentImageSrc) ?>" alt="Image actuelle de l'article">
+        <?php else: ?>
+            <p class="muted">Aucune image enregistrée pour cet article.</p>
+        <?php endif; ?>
+
+        <label for="image_file">Remplacer l'image (JPG, PNG, WEBP ou GIF, max 5 Mo)</label>
+        <input id="image_file" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+
+        <label>
+            <input type="checkbox" name="remove_image" value="1">
+            Supprimer l'image actuelle
+        </label>
 
         <button type="submit" name="update_article" value="1">Sauvegarder</button>
     </form>

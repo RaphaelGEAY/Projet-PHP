@@ -10,7 +10,6 @@ $values = [
     'description' => '',
     'price' => '',
     'stock_quantity' => '1',
-    'image_url' => '',
 ];
 $error = null;
 
@@ -19,10 +18,10 @@ if (is_post()) {
     $values['description'] = post_string('description');
     $values['price'] = post_string('price');
     $values['stock_quantity'] = post_string('stock_quantity');
-    $values['image_url'] = post_string('image_url');
 
     $price = (float) $values['price'];
     $stockQty = (int) $values['stock_quantity'];
+    $uploadedImagePath = null;
 
     if ($values['title'] === '') {
         $error = 'Le nom de la voiture est obligatoire.';
@@ -33,6 +32,15 @@ if (is_post()) {
     } elseif ($stockQty < 0) {
         $error = 'Le stock ne peut pas être négatif.';
     } else {
+        $uploadResult = store_uploaded_car_image('image_file');
+        if ($uploadResult['error'] !== null) {
+            $error = (string) $uploadResult['error'];
+        } else {
+            $uploadedImagePath = $uploadResult['path'];
+        }
+    }
+
+    if ($error === null) {
         db()->beginTransaction();
         try {
             $articleInsert = db()->prepare(
@@ -44,7 +52,7 @@ if (is_post()) {
                 'description' => $values['description'],
                 'price' => $price,
                 'author_id' => current_user()['id'],
-                'image_url' => $values['image_url'] !== '' ? $values['image_url'] : null,
+                'image_url' => $uploadedImagePath,
             ]);
 
             $articleId = (int) db()->lastInsertId();
@@ -61,6 +69,9 @@ if (is_post()) {
             redirect('detail.php?id=' . $articleId);
         } catch (Throwable $exception) {
             db()->rollBack();
+            if ($uploadedImagePath !== null) {
+                delete_uploaded_car_image($uploadedImagePath);
+            }
             $error = 'Impossible de créer l\'article: ' . $exception->getMessage();
         }
     }
@@ -75,7 +86,7 @@ render_header('Mettre en vente');
         <div class="flash flash-error"><?= e($error) ?></div>
     <?php endif; ?>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <label for="title">Nom de la voiture</label>
         <input id="title" name="title" required value="<?= e($values['title']) ?>" placeholder="Ex: Bugatti Chiron Super Sport">
 
@@ -88,8 +99,8 @@ render_header('Mettre en vente');
         <label for="stock_quantity">Stock</label>
         <input id="stock_quantity" name="stock_quantity" type="number" min="0" step="1" required value="<?= e($values['stock_quantity']) ?>">
 
-        <label for="image_url">Image (URL ou chemin local)</label>
-        <input id="image_url" name="image_url" type="text" value="<?= e($values['image_url']) ?>" placeholder="https://... ou assets/images/ma-voiture.jpg">
+        <label for="image_file">Image (JPG, PNG, WEBP ou GIF, max 5 Mo)</label>
+        <input id="image_file" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
 
         <button type="submit">Publier l'article</button>
     </form>

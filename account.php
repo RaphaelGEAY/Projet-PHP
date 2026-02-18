@@ -141,8 +141,9 @@ render_header('Compte');
 ?>
 <div class="card">
     <h1>Compte de <?= e($target['username']) ?></h1>
-    <?php if ($target['profile_photo']): ?>
-        <img class="car-image" style="max-width:220px;height:220px;" src="<?= e(media_src((string) $target['profile_photo'])) ?>" alt="Photo de profil">
+    <?php $profileImageSrc = media_src((string) ($target['profile_photo'] ?? '')); ?>
+    <?php if ($profileImageSrc !== ''): ?>
+        <img class="car-image" style="max-width:220px;height:220px;" src="<?= e($profileImageSrc) ?>" alt="Photo de profil">
     <?php endif; ?>
     <p><strong>Email:</strong> <?= e($target['email']) ?></p>
     <p><strong>Rôle:</strong> <?= e($target['role']) ?></p>
@@ -167,8 +168,8 @@ render_header('Compte');
             <label for="email">E-mail</label>
             <input id="email" type="email" name="email" required value="<?= e($self['email']) ?>">
 
-            <label for="profile_photo">Photo de profil (URL ou chemin local)</label>
-            <input id="profile_photo" type="text" name="profile_photo" value="<?= e((string) ($self['profile_photo'] ?? '')) ?>" placeholder="https://... ou assets/images/profil.jpg">
+            <label for="profile_photo">Photo de profil (chemin local)</label>
+            <input id="profile_photo" type="text" name="profile_photo" value="<?= e((string) ($self['profile_photo'] ?? '')) ?>" placeholder="assets/images/profil.jpg">
 
             <label for="new_password">Nouveau mot de passe (optionnel)</label>
             <input id="new_password" type="password" name="new_password">

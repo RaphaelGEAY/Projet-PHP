@@ -88,8 +88,8 @@ render_header('Inscription');
         <label for="password_confirm">Confirmer le mot de passe</label>
         <input id="password_confirm" type="password" name="password_confirm" required>
 
-        <label for="profile_photo">Photo de profil (URL ou chemin local, optionnel)</label>
-        <input id="profile_photo" type="text" name="profile_photo" value="<?= e($values['profile_photo']) ?>" placeholder="https://... ou assets/images/profil.jpg">
+        <label for="profile_photo">Photo de profil (chemin local, optionnel)</label>
+        <input id="profile_photo" type="text" name="profile_photo" value="<?= e($values['profile_photo']) ?>" placeholder="assets/images/profil.jpg">
 
         <button type="submit">S'inscrire</button>
     </form>

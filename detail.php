@@ -77,11 +77,14 @@ $canEdit = $user && ($user['role'] === 'admin' || (int) $user['id'] === (int) $a
 render_header('Détail article');
 ?>
 <article class="card">
-    <img
-        class="car-image"
-        src="<?= e(media_src($article['image_url'] ?? '', 'https://picsum.photos/900/450')) ?>"
-        alt="<?= e($article['title']) ?>"
-    >
+    <?php $imageSrc = media_src($article['image_url'] ?? ''); ?>
+    <?php if ($imageSrc !== ''): ?>
+        <img
+            class="car-image"
+            src="<?= e($imageSrc) ?>"
+            alt="<?= e($article['title']) ?>"
+        >
+    <?php endif; ?>
 
     <h1><?= e($article['title']) ?></h1>
     <p class="price"><?= e(format_price((float) $article['price'])) ?></p>
