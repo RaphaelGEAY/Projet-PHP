@@ -13,9 +13,20 @@ $email = '';
 if (is_post()) {
     $email = post_string('email');
     $password = (string) ($_POST['password'] ?? '');
+    $emailLower = strtolower($email);
+    $altEmail = $email;
 
-    $stmt = db()->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
-    $stmt->execute(['email' => $email]);
+    if (str_ends_with($emailLower, '@voitibox.local')) {
+        $altEmail = substr($email, 0, -strlen('@voitibox.local')) . '@automarket.local';
+    } elseif (str_ends_with($emailLower, '@automarket.local')) {
+        $altEmail = substr($email, 0, -strlen('@automarket.local')) . '@voitibox.local';
+    }
+
+    $stmt = db()->prepare('SELECT * FROM users WHERE email = :email OR email = :alt_email LIMIT 1');
+    $stmt->execute([
+        'email' => $email,
+        'alt_email' => $altEmail,
+    ]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
@@ -37,7 +48,7 @@ render_header('Connexion');
         <div class="flash flash-error"><?= e($error) ?></div>
     <?php endif; ?>
 
-    <form method="post">
+    <form method="post" class="auth-form">
         <label for="email">E-mail</label>
         <input id="email" type="email" name="email" required value="<?= e($email) ?>">
 

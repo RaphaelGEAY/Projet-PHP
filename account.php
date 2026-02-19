@@ -193,7 +193,7 @@ $profileInitial = strtoupper(substr((string) $target['username'], 0, 1));
 <?php if ($isSelf): ?>
     <div class="form-card">
         <h2>Modifier mes informations</h2>
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="profile-update-form">
             <label for="username">Username</label>
             <input id="username" name="username" required value="<?= e($self['username']) ?>">
 

@@ -21,24 +21,23 @@ function render_header(string $title): void
                 <nav class="main-nav">
                     <a href="<?= e(url('index.php')) ?>">Accueil</a>
                     <?php if ($user): ?>
-                        <a href="<?= e(url('sell.php')) ?>">Vendre</a>
-                        <a href="<?= e(url('cart/')) ?>">Panier</a>
                         <?php
                         $headerAvatarSrc = media_src((string) ($user['profile_photo'] ?? ''));
                         $headerInitial = strtoupper(substr((string) ($user['username'] ?? ''), 0, 1));
                         ?>
-                        <a class="nav-account" href="<?= e(url('account.php')) ?>">
+                        <a href="<?= e(url('sell.php')) ?>">Vendre</a>
+                        <a href="<?= e(url('cart/')) ?>">Panier</a>
+                        <?php if ($user['role'] === 'admin'): ?>
+                            <a href="<?= e(url('admin/')) ?>">Admin</a>
+                        <?php endif; ?>
+                        <a href="<?= e(url('logout.php')) ?>">Déconnexion</a>
+                        <a class="nav-account" href="<?= e(url('account.php')) ?>" aria-label="Mon compte" title="Mon compte">
                             <?php if ($headerAvatarSrc !== ''): ?>
                                 <img class="header-avatar" src="<?= e($headerAvatarSrc) ?>" alt="Profil de <?= e($user['username']) ?>">
                             <?php else: ?>
                                 <span class="header-avatar header-avatar-fallback"><?= e($headerInitial !== '' ? $headerInitial : '?') ?></span>
                             <?php endif; ?>
-                            <span>Mon compte</span>
                         </a>
-                        <?php if ($user['role'] === 'admin'): ?>
-                            <a href="<?= e(url('admin/')) ?>">Admin</a>
-                        <?php endif; ?>
-                        <a href="<?= e(url('logout.php')) ?>">Déconnexion</a>
                     <?php else: ?>
                         <a href="<?= e(url('login.php')) ?>">Connexion</a>
                         <a href="<?= e(url('register.php')) ?>">Inscription</a>

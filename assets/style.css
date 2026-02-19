@@ -101,6 +101,7 @@ body::after {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
+    align-items: center;
 }
 
 .main-nav a {
@@ -123,27 +124,37 @@ body::after {
 .nav-account {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.main-nav a.nav-account {
+    width: 2.6rem;
+    height: 2.6rem;
+    padding: 0.24rem;
+    border-radius: 999px;
 }
 
 .header-avatar {
-    width: 1.55rem;
-    height: 1.55rem;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid rgba(0, 124, 184, 0.45);
+    border: none;
     background: #def2ff;
-    box-shadow: 0 4px 10px rgba(0, 124, 184, 0.2);
+    box-shadow: none;
     flex: 0 0 auto;
+    display: block;
 }
 
 .header-avatar-fallback {
     display: grid;
     place-items: center;
     font-family: "Orbitron", "Eurostile", "Trebuchet MS", sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     font-weight: 800;
     color: #0f5e93;
+    background: linear-gradient(180deg, #e6f7ff, #d8efff);
 }
 
 main.container {
@@ -300,6 +311,18 @@ form label {
     display: block;
     margin: 0.72rem 0 0.36rem;
     font-weight: 700;
+}
+
+form :is(input:not([type="hidden"]), textarea, select, .checkbox-label) + button[type="submit"] {
+    margin-top: 0.9rem;
+}
+
+.inline-form :is(input:not([type="hidden"]), textarea, select, .checkbox-label) + button[type="submit"] {
+    margin-top: 0;
+}
+
+.auth-form + p {
+    margin-top: 1rem;
 }
 
 input[type="checkbox"],

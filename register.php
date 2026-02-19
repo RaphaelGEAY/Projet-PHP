@@ -75,7 +75,7 @@ render_header('Inscription');
         <div class="flash flash-error"><?= e($error) ?></div>
     <?php endif; ?>
 
-    <form method="post">
+    <form method="post" class="auth-form">
         <label for="username">Username</label>
         <input id="username" name="username" required value="<?= e($values['username']) ?>">
 
