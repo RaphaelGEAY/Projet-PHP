@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 19 fév. 2026 à 19:00
+-- Généré le : jeu. 19 fév. 2026 à 19:25
 -- Version du serveur : 8.0.45-0ubuntu0.22.04.1
 -- Version de PHP : 8.1.2-1ubuntu2.23
 
@@ -21,20 +21,6 @@ SET time_zone = "+00:00";
 -- Base de données : `php_exam_db`
 --
 
-CREATE DATABASE IF NOT EXISTS `php_exam_db`
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-USE `php_exam_db`;
-
-SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE IF EXISTS `invoice_items`;
-DROP TABLE IF EXISTS `invoice`;
-DROP TABLE IF EXISTS `cart`;
-DROP TABLE IF EXISTS `stock`;
-DROP TABLE IF EXISTS `articles`;
-DROP TABLE IF EXISTS `users`;
-SET FOREIGN_KEY_CHECKS = 1;
-
 -- --------------------------------------------------------
 
 --
@@ -43,12 +29,12 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `articles` (
   `id` int NOT NULL,
-  `title` varchar(160) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(160) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(15,2) NOT NULL,
   `published_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author_id` int NOT NULL,
-  `image_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -56,15 +42,15 @@ CREATE TABLE `articles` (
 --
 
 INSERT INTO `articles` (`id`, `title`, `description`, `price`, `published_at`, `author_id`, `image_url`) VALUES
-(1, 'Renault Clio 2012', 'Citadine fiable, faible consommation, ideale premier achat.', '4900.00', '2026-02-15 11:20:00', 2, 'assets/images/cars/20260218-130014-2f2905ed500b54cb.jpg'),
-(2, 'Peugeot 208 2016', 'Compacte essence, bon etat, carnet d\'entretien a jour.', '8900.00', '2026-02-12 16:45:00', 2, 'assets/images/cars/20260219-013922-8e9dd6612df5292c.jpg'),
-(3, 'Tesla Model 3 Long Range', 'Berline electrique, autonomie elevee, autopilot inclus.', '42990.00', '2026-02-17 09:05:00', 2, 'assets/images/cars/20260219-014042-288e3fcaefe0289e.webp'),
-(4, 'BMW M3 Competition', 'Performance sportive, pack carbone, historique clair.', '98900.00', '2026-02-11 13:40:00', 2, 'assets/images/cars/20260219-014127-91bccd748ef7ef7c.webp'),
+(1, 'Renault Clio 2012', 'Citadine fiable, faible consommation, ideale premier achat.', '4900.00', '2026-02-15 11:20:00', 2, 'assets/images/cars/20260219-014537-9a6fcf88b3f7ad64.webp'),
+(2, 'Peugeot 208 2016', 'Compacte essence, bon etat, carnet d\'entretien a jour.', '8900.00', '2026-02-12 16:45:00', 2, 'assets/images/cars/20260219-014513-fd5997b98f7328d6.jpg'),
+(3, 'Tesla Model 3 Long Range', 'Berline electrique, autonomie elevee, autopilot inclus.', '42990.00', '2026-02-17 09:05:00', 2, 'assets/images/cars/20260219-014441-67c2a5358f7a38c0.webp'),
+(4, 'BMW M3 Competition', 'Performance sportive, pack carbone, historique clair.', '98900.00', '2026-02-11 13:40:00', 2, 'assets/images/cars/20260219-014244-0ac01f1e98263e66.jpg'),
 (5, 'Porsche 911 GT3', 'Coupe iconique, atmospherique, etat collection.', '235000.00', '2026-02-16 18:30:00', 2, 'assets/images/cars/20260219-014156-653cd2616676d114.webp'),
-(6, 'Ferrari SF90 Stradale', 'Hybride haute performance, configuration personnalisee.', '520000.00', '2026-02-13 08:55:00', 2, 'assets/images/cars/20260219-014244-0ac01f1e98263e66.jpg'),
-(7, 'Bugatti Chiron Super Sport', 'Hypercar 1600 ch, production ultra limitee.', '3900000.00', '2026-02-18 12:15:00', 2, 'assets/images/cars/20260219-014441-67c2a5358f7a38c0.webp'),
-(8, 'Rolls-Royce Boat Tail', 'Luxe artisanal extreme, finition sur mesure.', '28000000.00', '2026-02-10 19:10:00', 2, 'assets/images/cars/20260219-014513-fd5997b98f7328d6.jpg'),
-(9, 'Hyperion Imperium One-Off', 'Concept unique en diamant noir, piece de collection ultime.', '1000000000.00', '2026-02-14 07:35:00', 1, 'assets/images/cars/20260219-014537-9a6fcf88b3f7ad64.webp');
+(6, 'Ferrari SF90 Stradale', 'Hybride haute performance, configuration personnalisee.', '520000.00', '2026-02-13 08:55:00', 2, 'assets/images/cars/20260219-014127-91bccd748ef7ef7c.webp'),
+(7, 'Bugatti Chiron Super Sport', 'Hypercar 1600 ch, production ultra limitee.', '3900000.00', '2026-02-18 12:15:00', 2, 'assets/images/cars/20260219-014042-288e3fcaefe0289e.webp'),
+(8, 'Rolls-Royce Boat Tail', 'Luxe artisanal extreme, finition sur mesure.', '28000000.00', '2026-02-10 19:10:00', 2, 'assets/images/cars/20260219-013922-8e9dd6612df5292c.jpg'),
+(9, 'Hyperion Imperium One', 'Concept unique en diamant noir, piece de collection ultime.', '1000000000.00', '2026-02-14 07:35:00', 1, 'assets/images/cars/20260218-130014-2f2905ed500b54cb.jpg');
 
 -- --------------------------------------------------------
 
@@ -90,9 +76,9 @@ CREATE TABLE `invoice` (
   `user_id` int NOT NULL,
   `transaction_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `amount` decimal(15,2) NOT NULL,
-  `billing_address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `billing_city` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `billing_postal_code` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
+  `billing_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `billing_city` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `billing_postal_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -105,7 +91,7 @@ CREATE TABLE `invoice_items` (
   `id` int NOT NULL,
   `invoice_id` int NOT NULL,
   `article_id` int DEFAULT NULL,
-  `article_name` varchar(160) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `article_name` varchar(160) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `unit_price` decimal(15,2) NOT NULL,
   `quantity` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -145,12 +131,12 @@ INSERT INTO `stock` (`id`, `article_id`, `quantity`) VALUES
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `username` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(190) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `balance` decimal(15,2) NOT NULL DEFAULT '0.00',
-  `profile_photo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` enum('user','admin') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user',
+  `profile_photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `role` enum('user','admin') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
