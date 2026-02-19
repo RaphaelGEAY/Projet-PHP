@@ -57,4 +57,3 @@ Voitibox est un site web qui permet de vendre des voitures de toutes sortes ains
 - Utilisateur acheteur
   - email: `buyer@voitibox.local`
   - mot de passe: `user1234`
-

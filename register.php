@@ -10,16 +10,15 @@ if (is_logged_in()) {
 $values = [
     'username' => '',
     'email' => '',
-    'profile_photo' => '',
 ];
 $error = null;
 
 if (is_post()) {
     $values['username'] = post_string('username');
     $values['email'] = post_string('email');
-    $values['profile_photo'] = post_string('profile_photo');
     $password = (string) ($_POST['password'] ?? '');
     $passwordConfirm = (string) ($_POST['password_confirm'] ?? '');
+    $uploadedProfilePhotoPath = null;
 
     if ($values['username'] === '' || strlen($values['username']) < 3) {
         $error = 'Le username doit contenir au moins 3 caractères.';
@@ -44,6 +43,17 @@ if (is_post()) {
                 $error = 'Cette adresse e-mail est déjà utilisée.';
             }
         } else {
+            $uploadResult = store_uploaded_profile_image('profile_photo_file');
+            if ($uploadResult['error'] !== null) {
+                $error = (string) $uploadResult['error'];
+            } else {
+                $uploadedProfilePhotoPath = $uploadResult['path'];
+            }
+        }
+    }
+
+    if ($error === null) {
+        try {
             $insert = db()->prepare(
                 'INSERT INTO users (username, email, password, balance, profile_photo, role, created_at)
                  VALUES (:username, :email, :password, 0, :profile_photo, :role, NOW())'
@@ -53,7 +63,7 @@ if (is_post()) {
                 'username' => $values['username'],
                 'email' => $values['email'],
                 'password' => password_hash($password, PASSWORD_BCRYPT),
-                'profile_photo' => $values['profile_photo'] !== '' ? $values['profile_photo'] : null,
+                'profile_photo' => $uploadedProfilePhotoPath,
                 'role' => 'user',
             ]);
 
@@ -61,6 +71,11 @@ if (is_post()) {
             current_user(true);
             set_flash('success', 'Compte créé avec succès. Vous êtes connecté.');
             redirect('');
+        } catch (Throwable) {
+            if ($uploadedProfilePhotoPath !== null) {
+                delete_uploaded_profile_image($uploadedProfilePhotoPath);
+            }
+            $error = 'Impossible de créer le compte pour le moment. Veuillez réessayer.';
         }
     }
 }
@@ -75,7 +90,7 @@ render_header('Inscription');
         <div class="flash flash-error"><?= e($error) ?></div>
     <?php endif; ?>
 
-    <form method="post" class="auth-form">
+    <form method="post" enctype="multipart/form-data" class="auth-form">
         <label for="username">Username</label>
         <input id="username" name="username" required value="<?= e($values['username']) ?>">
 
@@ -88,8 +103,8 @@ render_header('Inscription');
         <label for="password_confirm">Confirmer le mot de passe</label>
         <input id="password_confirm" type="password" name="password_confirm" required>
 
-        <label for="profile_photo">Photo de profil (chemin local, optionnel)</label>
-        <input id="profile_photo" type="text" name="profile_photo" value="<?= e($values['profile_photo']) ?>" placeholder="assets/images/profil.jpg">
+        <label for="profile_photo_file">Photo de profil (optionnel: JPG, PNG, WEBP ou GIF, max 5 Mo)</label>
+        <input id="profile_photo_file" name="profile_photo_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
 
         <button type="submit">S'inscrire</button>
     </form>
