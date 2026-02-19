@@ -21,6 +21,7 @@ $sql = "
         a.image_url,
         a.published_at,
         u.username,
+        u.profile_photo,
         COALESCE(s.quantity, 0) AS stock_quantity
     FROM articles a
     INNER JOIN users u ON u.id = a.author_id
@@ -29,8 +30,9 @@ $sql = "
 
 $params = [];
 if ($q !== '') {
-    $sql .= " WHERE a.title LIKE :search OR a.description LIKE :search ";
-    $params['search'] = '%' . $q . '%';
+    $sql .= " WHERE a.title LIKE :search_title OR a.description LIKE :search_description ";
+    $params['search_title'] = '%' . $q . '%';
+    $params['search_description'] = '%' . $q . '%';
 }
 
 $sql .= " ORDER BY {$orderBy}";
@@ -45,7 +47,7 @@ render_header('Accueil');
     <h1>Voitures en vente</h1>
     <p class="muted">Des modèles pas chers aux hypercars de luxe à 1 000 000 000 €.</p>
 
-    <form method="get" class="inline-form">
+    <form method="get" action="<?= e(url('index.php')) ?>" class="inline-form">
         <input type="text" name="q" placeholder="Rechercher une voiture" value="<?= e($q) ?>">
         <select name="sort">
             <option value="recent" <?= $sort === 'recent' ? 'selected' : '' ?>>Plus récent</option>
@@ -63,7 +65,7 @@ render_header('Accueil');
 <?php else: ?>
     <section class="grid">
         <?php foreach ($articles as $article): ?>
-            <article class="card">
+            <article class="card listing-card">
                 <?php $imageSrc = media_src($article['image_url'] ?? ''); ?>
                 <?php if ($imageSrc !== ''): ?>
                     <img
@@ -72,9 +74,20 @@ render_header('Accueil');
                         alt="<?= e($article['title']) ?>"
                     >
                 <?php endif; ?>
+                <?php
+                $sellerAvatarSrc = media_src((string) ($article['profile_photo'] ?? ''));
+                $sellerInitial = strtoupper(substr((string) $article['username'], 0, 1));
+                ?>
                 <h2><?= e($article['title']) ?></h2>
                 <p class="price"><?= e(format_price((float) $article['price'])) ?></p>
-                <p class="muted">Vendeur: <?= e($article['username']) ?></p>
+                <div class="seller-line">
+                    <?php if ($sellerAvatarSrc !== ''): ?>
+                        <img class="seller-avatar" src="<?= e($sellerAvatarSrc) ?>" alt="Photo de <?= e($article['username']) ?>">
+                    <?php else: ?>
+                        <span class="seller-avatar seller-avatar-fallback"><?= e($sellerInitial !== '' ? $sellerInitial : '?') ?></span>
+                    <?php endif; ?>
+                    <p class="muted">Vendeur: <?= e($article['username']) ?></p>
+                </div>
                 <p class="muted">Stock: <?= e((string) $article['stock_quantity']) ?></p>
                 <p><?= e(strlen($article['description']) > 120 ? substr($article['description'], 0, 117) . '...' : $article['description']) ?></p>
                 <a class="btn" href="<?= e(url('detail.php?id=' . $article['id'])) ?>">Voir le détail</a>

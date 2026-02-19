@@ -1,4 +1,4 @@
--- Projet final PHP E-Commerce - AutoMarket
+-- Projet final PHP E-Commerce - VoitiBox
 -- Importez ce fichier dans phpMyAdmin pour générer la base complète.
 
 CREATE DATABASE IF NOT EXISTS php_exam_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -89,23 +89,23 @@ CREATE TABLE invoice_items (
 ) ENGINE=InnoDB;
 
 INSERT INTO users (id, username, password, email, balance, profile_photo, role, created_at) VALUES
-(1, 'admin', '$2y$10$wF1WJECjfEC4HfwqKs6hAOD7HRhfq/0WpNYOSuDgpwQE3ASGDNRIy',  'admin@automarket.local', 5000000000.00, 'assets/images/profil-admin.jpg', 'admin', '2026-02-10 10:00:00'),
-(2, 'seller_pro', '$2y$10$469Zo2jDYxO29RUodLeiW.lt8r8RlRx4mUxtCNDgdCeDex7mJXAey', 'seller@automarket.local', 15000.00, 'assets/images/profil-seller.jpg', 'user', '2026-02-11 11:00:00'),
-(3, 'buyer_demo', '$2y$10$469Zo2jDYxO29RUodLeiW.lt8r8RlRx4mUxtCNDgdCeDex7mJXAey', 'buyer@automarket.local', 1200000.00, 'assets/images/profil-buyer.jpg', 'user', '2026-02-12 12:00:00');
+(1, 'admin', '$2y$10$wF1WJECjfEC4HfwqKs6hAOD7HRhfq/0WpNYOSuDgpwQE3ASGDNRIy',  'admin@voitibox.local', 5000000000.00, 'assets/images/profil-admin.jpg', 'admin', '2026-02-10 10:00:00'),
+(2, 'seller_pro', '$2y$10$469Zo2jDYxO29RUodLeiW.lt8r8RlRx4mUxtCNDgdCeDex7mJXAey', 'seller@voitibox.local', 15000.00, 'assets/images/profil-seller.jpg', 'user', '2026-02-11 11:00:00'),
+(3, 'buyer_demo', '$2y$10$469Zo2jDYxO29RUodLeiW.lt8r8RlRx4mUxtCNDgdCeDex7mJXAey', 'buyer@voitibox.local', 1200000.00, 'assets/images/profil-buyer.jpg', 'user', '2026-02-12 12:00:00');
 
 -- Mot de passe admin: admin123
 -- Mot de passe utilisateurs de démo: user1234
 
 INSERT INTO articles (id, title, description, price, published_at, author_id, image_url) VALUES
-(1, 'Renault Clio 2012', 'Citadine fiable, faible consommation, idéale premier achat.', 4900.00, '2026-02-12 09:10:00', 2, 'assets/images/renault-clio-2012.jpg'),
-(2, 'Peugeot 208 2016', 'Compacte essence, bon état, carnet d\'entretien à jour.', 8900.00, '2026-02-12 09:15:00', 2, 'assets/images/peugeot-208-2016.jpg'),
-(3, 'Tesla Model 3 Long Range', 'Berline électrique, autonomie élevée, autopilot inclus.', 42990.00, '2026-02-12 10:30:00', 2, 'assets/images/tesla-model-3-long-range.jpg'),
-(4, 'BMW M3 Competition', 'Performance sportive, pack carbone, historique clair.', 98900.00, '2026-02-13 08:45:00', 2, 'assets/images/bmw-m3-competition.jpg'),
-(5, 'Porsche 911 GT3', 'Coupé iconique, atmosphérique, état collection.', 235000.00, '2026-02-13 14:20:00', 2, 'assets/images/porsche-911-gt3.jpg'),
-(6, 'Ferrari SF90 Stradale', 'Hybride haute performance, configuration personnalisée.', 520000.00, '2026-02-14 10:10:00', 2, 'assets/images/ferrari-sf90-stradale.jpg'),
-(7, 'Bugatti Chiron Super Sport', 'Hypercar 1600 ch, production ultra limitée.', 3900000.00, '2026-02-14 12:40:00', 2, 'assets/images/bugatti-chiron-super-sport.jpg'),
-(8, 'Rolls-Royce Boat Tail', 'Luxe artisanal extrême, finition sur mesure.', 28000000.00, '2026-02-15 09:05:00', 2, 'assets/images/rolls-royce-boat-tail.jpg'),
-(9, 'Hyperion Imperium One-Off', 'Concept unique en diamant noir, pièce de collection ultime.', 1000000000.00, '2026-02-16 16:00:00', 1, 'assets/images/hyperion-imperium-one-off.jpg');
+(1, 'Renault Clio 2012', 'Citadine fiable, faible consommation, idéale premier achat.', 4900.00, '2026-02-15 11:20:00', 2, 'assets/images/renault-clio-2012.jpg'),
+(2, 'Peugeot 208 2016', 'Compacte essence, bon état, carnet d\'entretien à jour.', 8900.00, '2026-02-12 16:45:00', 2, 'assets/images/peugeot-208-2016.jpg'),
+(3, 'Tesla Model 3 Long Range', 'Berline électrique, autonomie élevée, autopilot inclus.', 42990.00, '2026-02-17 09:05:00', 2, 'assets/images/tesla-model-3-long-range.jpg'),
+(4, 'BMW M3 Competition', 'Performance sportive, pack carbone, historique clair.', 98900.00, '2026-02-11 13:40:00', 2, 'assets/images/bmw-m3-competition.jpg'),
+(5, 'Porsche 911 GT3', 'Coupé iconique, atmosphérique, état collection.', 235000.00, '2026-02-16 18:30:00', 2, 'assets/images/porsche-911-gt3.jpg'),
+(6, 'Ferrari SF90 Stradale', 'Hybride haute performance, configuration personnalisée.', 520000.00, '2026-02-13 08:55:00', 2, 'assets/images/ferrari-sf90-stradale.jpg'),
+(7, 'Bugatti Chiron Super Sport', 'Hypercar 1600 ch, production ultra limitée.', 3900000.00, '2026-02-18 12:15:00', 2, 'assets/images/bugatti-chiron-super-sport.jpg'),
+(8, 'Rolls-Royce Boat Tail', 'Luxe artisanal extrême, finition sur mesure.', 28000000.00, '2026-02-10 19:10:00', 2, 'assets/images/rolls-royce-boat-tail.jpg'),
+(9, 'Hyperion Imperium One-Off', 'Concept unique en diamant noir, pièce de collection ultime.', 1000000000.00, '2026-02-14 07:35:00', 1, 'assets/images/hyperion-imperium-one-off.jpg');
 
 INSERT INTO stock (article_id, quantity) VALUES
 (1, 12),

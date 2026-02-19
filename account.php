@@ -162,19 +162,28 @@ if ($isSelf) {
 
 render_header('Compte');
 ?>
-<div class="card">
-    <h1>Compte de <?= e($target['username']) ?></h1>
-    <?php $profileImageSrc = media_src((string) ($target['profile_photo'] ?? '')); ?>
-    <?php if ($profileImageSrc !== ''): ?>
-        <img class="car-image" style="max-width:220px;height:220px;" src="<?= e($profileImageSrc) ?>" alt="Photo de profil">
-    <?php endif; ?>
-    <p><strong>Email:</strong> <?= e($target['email']) ?></p>
-    <p><strong>Rôle:</strong> <?= e($target['role']) ?></p>
-    <p><strong>Membre depuis:</strong> <?= e(date('d/m/Y', strtotime($target['created_at']))) ?></p>
+<?php
+$profileImageSrc = media_src((string) ($target['profile_photo'] ?? ''));
+$profileInitial = strtoupper(substr((string) $target['username'], 0, 1));
+?>
+<div class="card profile-hero">
+    <div class="profile-hero-photo">
+        <?php if ($profileImageSrc !== ''): ?>
+            <img class="profile-photo" src="<?= e($profileImageSrc) ?>" alt="Photo de profil">
+        <?php else: ?>
+            <div class="profile-photo profile-photo-placeholder"><?= e($profileInitial !== '' ? $profileInitial : '?') ?></div>
+        <?php endif; ?>
+    </div>
+    <div class="profile-meta">
+        <h1>Compte de <?= e($target['username']) ?></h1>
+        <p><strong>Email:</strong> <?= e($target['email']) ?></p>
+        <p><strong>Rôle:</strong> <?= e($target['role']) ?></p>
+        <p><strong>Membre depuis:</strong> <?= e(date('d/m/Y', strtotime($target['created_at']))) ?></p>
 
-    <?php if ($isSelf): ?>
-        <p><strong>Solde:</strong> <?= e(format_price((float) $target['balance'])) ?></p>
-    <?php endif; ?>
+        <?php if ($isSelf): ?>
+            <p><strong>Solde:</strong> <?= e(format_price((float) $target['balance'])) ?></p>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php if ($error): ?>

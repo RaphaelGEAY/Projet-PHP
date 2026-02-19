@@ -1,4 +1,4 @@
-# AutoMarket - Projet final PHP E-Commerce
+# VoitiBox - Projet final PHP E-Commerce
 
 Site e-commerce 100% PHP (sans framework backend) pour vendre/acheter des voitures, de l'entrée de gamme aux modèles de luxe.
 
@@ -69,15 +69,15 @@ UPDATE users SET profile_photo = 'assets/images/profil-admin.jpg' WHERE id = 1;
 ## Comptes de démonstration
 
 - Admin
-  - email: `admin@automarket.local`
+  - email: `admin@voitibox.local`
   - mot de passe: `admin123`
 
 - Utilisateur
-  - email: `seller@automarket.local`
+  - email: `seller@voitibox.local`
   - mot de passe: `user1234`
 
 - Utilisateur
-  - email: `buyer@automarket.local`
+  - email: `buyer@voitibox.local`
   - mot de passe: `user1234`
 
 ## Arborescence principale
