@@ -21,6 +21,20 @@ SET time_zone = "+00:00";
 -- Base de données : `php_exam_db`
 --
 
+CREATE DATABASE IF NOT EXISTS `php_exam_db`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+USE `php_exam_db`;
+
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `invoice_items`;
+DROP TABLE IF EXISTS `invoice`;
+DROP TABLE IF EXISTS `cart`;
+DROP TABLE IF EXISTS `stock`;
+DROP TABLE IF EXISTS `articles`;
+DROP TABLE IF EXISTS `users`;
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- --------------------------------------------------------
 
 --
