@@ -119,6 +119,38 @@ button {
     font: inherit;
 }
 
+form label {
+    display: block;
+    margin: 0.7rem 0 0.35rem;
+    font-weight: 600;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: auto;
+    padding: 0;
+}
+
+input[type="checkbox"] {
+    accent-color: var(--primary);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0.7rem 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    flex: 0 0 auto;
+}
+
 textarea {
     min-height: 120px;
     resize: vertical;

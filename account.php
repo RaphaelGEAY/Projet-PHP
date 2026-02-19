@@ -24,8 +24,11 @@ if ($isSelf && is_post()) {
     if (isset($_POST['update_profile'])) {
         $username = post_string('username');
         $email = post_string('email');
-        $profilePhoto = post_string('profile_photo');
         $newPassword = (string) ($_POST['new_password'] ?? '');
+        $currentProfilePhotoPath = (string) ($self['profile_photo'] ?? '');
+        $uploadedProfilePhotoPath = null;
+        $removeProfilePhoto = isset($_POST['remove_profile_photo']);
+        $nextProfilePhotoPath = $removeProfilePhoto ? '' : $currentProfilePhotoPath;
 
         if ($username === '' || strlen($username) < 3) {
             $error = 'Le username doit contenir au moins 3 caractères.';
@@ -34,6 +37,18 @@ if ($isSelf && is_post()) {
         } elseif ($newPassword !== '' && strlen($newPassword) < 6) {
             $error = 'Le nouveau mot de passe doit contenir au moins 6 caractères.';
         } else {
+            $uploadResult = store_uploaded_profile_image('profile_photo_file');
+            if ($uploadResult['error'] !== null) {
+                $error = (string) $uploadResult['error'];
+            } else {
+                $uploadedProfilePhotoPath = $uploadResult['path'];
+                if ($uploadedProfilePhotoPath !== null) {
+                    $nextProfilePhotoPath = (string) $uploadedProfilePhotoPath;
+                }
+            }
+        }
+
+        if ($error === null) {
             $uniqueStmt = db()->prepare('SELECT id FROM users WHERE (username = :username OR email = :email) AND id <> :id LIMIT 1');
             $uniqueStmt->execute([
                 'username' => $username,
@@ -55,7 +70,7 @@ if ($isSelf && is_post()) {
                     $update->execute([
                         'username' => $username,
                         'email' => $email,
-                        'profile_photo' => $profilePhoto !== '' ? $profilePhoto : null,
+                        'profile_photo' => $nextProfilePhotoPath !== '' ? $nextProfilePhotoPath : null,
                         'password' => password_hash($newPassword, PASSWORD_BCRYPT),
                         'id' => $self['id'],
                     ]);
@@ -70,15 +85,23 @@ if ($isSelf && is_post()) {
                     $update->execute([
                         'username' => $username,
                         'email' => $email,
-                        'profile_photo' => $profilePhoto !== '' ? $profilePhoto : null,
+                        'profile_photo' => $nextProfilePhotoPath !== '' ? $nextProfilePhotoPath : null,
                         'id' => $self['id'],
                     ]);
+                }
+
+                if ($nextProfilePhotoPath !== $currentProfilePhotoPath) {
+                    delete_uploaded_profile_image($currentProfilePhotoPath);
                 }
 
                 current_user(true);
                 set_flash('success', 'Profil mis à jour.');
                 redirect('account.php');
             }
+        }
+
+        if ($error !== null && $uploadedProfilePhotoPath !== null) {
+            delete_uploaded_profile_image($uploadedProfilePhotoPath);
         }
     }
 
@@ -161,15 +184,20 @@ render_header('Compte');
 <?php if ($isSelf): ?>
     <div class="form-card">
         <h2>Modifier mes informations</h2>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <label for="username">Username</label>
             <input id="username" name="username" required value="<?= e($self['username']) ?>">
 
             <label for="email">E-mail</label>
             <input id="email" type="email" name="email" required value="<?= e($self['email']) ?>">
 
-            <label for="profile_photo">Photo de profil (chemin local)</label>
-            <input id="profile_photo" type="text" name="profile_photo" value="<?= e((string) ($self['profile_photo'] ?? '')) ?>" placeholder="assets/images/profil.jpg">
+            <label for="profile_photo_file">Remplacer la photo (JPG, PNG, WEBP ou GIF, max 5 Mo)</label>
+            <input id="profile_photo_file" name="profile_photo_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+
+            <label class="checkbox-label">
+                <input type="checkbox" name="remove_profile_photo" value="1">
+                Supprimer la photo actuelle
+            </label>
 
             <label for="new_password">Nouveau mot de passe (optionnel)</label>
             <input id="new_password" type="password" name="new_password">

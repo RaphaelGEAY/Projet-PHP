@@ -271,6 +271,11 @@ function store_uploaded_car_image(string $field = 'image_file'): array
     return store_uploaded_local_image($field, 'assets/images/cars');
 }
 
+function store_uploaded_profile_image(string $field = 'profile_photo_file'): array
+{
+    return store_uploaded_local_image($field, 'assets/images/cars/profiles');
+}
+
 function delete_uploaded_car_image(?string $relativePath): void
 {
     $path = trim((string) $relativePath);
@@ -285,6 +290,37 @@ function delete_uploaded_car_image(?string $relativePath): void
     }
 
     $baseDir = realpath(__DIR__ . '/../assets/images/cars');
+    if ($baseDir === false) {
+        return;
+    }
+
+    $absolutePath = __DIR__ . '/../' . $normalized;
+    $realPath = realpath($absolutePath);
+    if ($realPath === false || !is_file($realPath)) {
+        return;
+    }
+
+    if (!str_starts_with($realPath, $baseDir . DIRECTORY_SEPARATOR)) {
+        return;
+    }
+
+    @unlink($realPath);
+}
+
+function delete_uploaded_profile_image(?string $relativePath): void
+{
+    $path = trim((string) $relativePath);
+    if ($path === '') {
+        return;
+    }
+
+    $normalized = ltrim($path, '/');
+    $prefix = 'assets/images/cars/profiles/';
+    if (!str_starts_with($normalized, $prefix)) {
+        return;
+    }
+
+    $baseDir = realpath(__DIR__ . '/../assets/images/cars/profiles');
     if ($baseDir === false) {
         return;
     }

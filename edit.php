@@ -183,7 +183,7 @@ render_header('Modifier article');
         <label for="image_file">Remplacer l'image (JPG, PNG, WEBP ou GIF, max 5 Mo)</label>
         <input id="image_file" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
 
-        <label>
+        <label class="checkbox-label">
             <input type="checkbox" name="remove_image" value="1">
             Supprimer l'image actuelle
         </label>

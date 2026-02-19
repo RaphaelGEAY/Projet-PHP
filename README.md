@@ -56,7 +56,7 @@ Le projet accepte maintenant :
 
 Workflow recommandé :
 1. Copier vos fichiers image dans `assets/images/`.
-2. Depuis `sell.php`, `edit.php` ou `account.php`, renseigner le champ image avec un chemin comme `assets/images/ma-voiture.jpg`.
+2. Depuis `sell.php`, `edit.php` ou `account.php`, utilisez le champ fichier pour envoyer l'image (JPG/PNG/WEBP/GIF, max 5 Mo).
 3. Ouvrir le site et vérifier l'affichage (les fichiers manquants ou à `0` octet ne sont pas affichés).
 
 Pour remplacer rapidement les images de démo déjà en base :
