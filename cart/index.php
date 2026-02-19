@@ -106,7 +106,7 @@ render_header('Panier');
 
     <?php if (empty($items)): ?>
         <p>Votre panier est vide.</p>
-        <a class="btn" href="<?= e(url('index.php')) ?>">Voir les voitures</a>
+        <a class="btn" href="<?= e(url('')) ?>">Voir les voitures</a>
     <?php else: ?>
         <table>
             <thead>
@@ -127,7 +127,7 @@ render_header('Panier');
                     ?>
                     <tr>
                         <td>
-                            <a href="<?= e(url('detail.php?id=' . $item['article_id'])) ?>"><?= e($item['title']) ?></a>
+                            <a href="<?= e(url('detail/?id=' . $item['article_id'])) ?>"><?= e($item['title']) ?></a>
                             <?php if ($invalidQty): ?>
                                 <div class="muted" style="color:#b42318;">Stock insuffisant pour cette quantité.</div>
                             <?php endif; ?>

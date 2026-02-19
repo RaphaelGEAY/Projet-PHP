@@ -87,7 +87,7 @@ function require_login(): void
 {
     if (!is_logged_in()) {
         set_flash('error', 'Connectez-vous pour accéder à cette page.');
-        redirect('login.php');
+        redirect('login/');
     }
 }
 
@@ -97,7 +97,7 @@ function require_admin(): void
 
     if (!is_admin()) {
         set_flash('error', 'Accès refusé: administrateur requis.');
-        redirect('index.php');
+        redirect('');
     }
 }
 

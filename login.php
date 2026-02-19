@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/bootstrap.php';
 
 if (is_logged_in()) {
-    redirect('index.php');
+    redirect('');
 }
 
 $error = null;
@@ -33,7 +33,7 @@ if (is_post()) {
         $_SESSION['user_id'] = (int) $user['id'];
         current_user(true);
         set_flash('success', 'Connexion réussie.');
-        redirect('index.php');
+        redirect('');
     }
 
     $error = 'Identifiants invalides.';
@@ -58,6 +58,6 @@ render_header('Connexion');
         <button type="submit">Se connecter</button>
     </form>
 
-    <p>Pas encore de compte ? <a href="<?= e(url('register.php')) ?>">Inscrivez-vous</a>.</p>
+    <p>Pas encore de compte ? <a href="<?= e(url('register/')) ?>">Inscrivez-vous</a>.</p>
 </div>
 <?php render_footer(); ?>

@@ -66,7 +66,7 @@ if (is_post()) {
             db()->commit();
 
             set_flash('success', 'Article créé avec succès.');
-            redirect('detail.php?id=' . $articleId);
+            redirect('detail/?id=' . $articleId);
         } catch (Throwable $exception) {
             db()->rollBack();
             if ($uploadedImagePath !== null) {

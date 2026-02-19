@@ -17,21 +17,21 @@ function render_header(string $title): void
     <body>
         <header class="site-header">
             <div class="container nav-wrap">
-                <a class="logo" href="<?= e(url('index.php')) ?>">VoitiBox</a>
+                <a class="logo" href="<?= e(url('')) ?>">VoitiBox</a>
                 <nav class="main-nav">
-                    <a href="<?= e(url('index.php')) ?>">Accueil</a>
+                    <a href="<?= e(url('')) ?>">Accueil</a>
                     <?php if ($user): ?>
                         <?php
                         $headerAvatarSrc = media_src((string) ($user['profile_photo'] ?? ''));
                         $headerInitial = strtoupper(substr((string) ($user['username'] ?? ''), 0, 1));
                         ?>
-                        <a href="<?= e(url('sell.php')) ?>">Vendre</a>
+                        <a href="<?= e(url('sell/')) ?>">Vendre</a>
                         <a href="<?= e(url('cart/')) ?>">Panier</a>
                         <?php if ($user['role'] === 'admin'): ?>
                             <a href="<?= e(url('admin/')) ?>">Admin</a>
                         <?php endif; ?>
-                        <a href="<?= e(url('logout.php')) ?>">Déconnexion</a>
-                        <a class="nav-account" href="<?= e(url('account.php')) ?>" aria-label="Mon compte" title="Mon compte">
+                        <a href="<?= e(url('logout/')) ?>">Déconnexion</a>
+                        <a class="nav-account" href="<?= e(url('account/')) ?>" aria-label="Mon compte" title="Mon compte">
                             <?php if ($headerAvatarSrc !== ''): ?>
                                 <img class="header-avatar" src="<?= e($headerAvatarSrc) ?>" alt="Profil de <?= e($user['username']) ?>">
                             <?php else: ?>
@@ -39,8 +39,8 @@ function render_header(string $title): void
                             <?php endif; ?>
                         </a>
                     <?php else: ?>
-                        <a href="<?= e(url('login.php')) ?>">Connexion</a>
-                        <a href="<?= e(url('register.php')) ?>">Inscription</a>
+                        <a href="<?= e(url('login/')) ?>">Connexion</a>
+                        <a href="<?= e(url('register/')) ?>">Inscription</a>
                     <?php endif; ?>
                 </nav>
             </div>

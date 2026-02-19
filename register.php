@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/bootstrap.php';
 
 if (is_logged_in()) {
-    redirect('index.php');
+    redirect('');
 }
 
 $values = [
@@ -60,7 +60,7 @@ if (is_post()) {
             $_SESSION['user_id'] = (int) db()->lastInsertId();
             current_user(true);
             set_flash('success', 'Compte créé avec succès. Vous êtes connecté.');
-            redirect('index.php');
+            redirect('');
         }
     }
 }
@@ -94,6 +94,6 @@ render_header('Inscription');
         <button type="submit">S'inscrire</button>
     </form>
 
-    <p>Déjà inscrit ? <a href="<?= e(url('login.php')) ?>">Connectez-vous</a>.</p>
+    <p>Déjà inscrit ? <a href="<?= e(url('login/')) ?>">Connectez-vous</a>.</p>
 </div>
 <?php render_footer(); ?>

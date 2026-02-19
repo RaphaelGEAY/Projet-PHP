@@ -47,7 +47,7 @@ render_header('Accueil');
     <h1>Voitures en vente</h1>
     <p class="muted">Des modèles pas chers aux hypercars de luxe à 1 000 000 000 €.</p>
 
-    <form method="get" action="<?= e(url('index.php')) ?>" class="inline-form">
+    <form method="get" action="<?= e(url('')) ?>" class="inline-form">
         <input type="text" name="q" placeholder="Rechercher une voiture" value="<?= e($q) ?>">
         <select name="sort">
             <option value="recent" <?= $sort === 'recent' ? 'selected' : '' ?>>Plus récent</option>
@@ -90,7 +90,7 @@ render_header('Accueil');
                 </div>
                 <p class="muted">Stock: <?= e((string) $article['stock_quantity']) ?></p>
                 <p><?= e(strlen($article['description']) > 120 ? substr($article['description'], 0, 117) . '...' : $article['description']) ?></p>
-                <a class="btn" href="<?= e(url('detail.php?id=' . $article['id'])) ?>">Voir le détail</a>
+                <a class="btn" href="<?= e(url('detail/?id=' . $article['id'])) ?>">Voir le détail</a>
             </article>
         <?php endforeach; ?>
     </section>

@@ -14,7 +14,7 @@ $target = $targetStmt->fetch();
 
 if (!$target) {
     set_flash('error', 'Utilisateur introuvable.');
-    redirect('account.php');
+    redirect('account/');
 }
 
 $isSelf = (int) $target['id'] === (int) $self['id'];
@@ -96,7 +96,7 @@ if ($isSelf && is_post()) {
 
                 current_user(true);
                 set_flash('success', 'Profil mis à jour.');
-                redirect('account.php');
+                redirect('account/');
             }
         }
 
@@ -117,7 +117,7 @@ if ($isSelf && is_post()) {
             ]);
             current_user(true);
             set_flash('success', 'Solde crédité de ' . format_price($amount) . '.');
-            redirect('account.php');
+            redirect('account/');
         }
     }
 }
@@ -241,7 +241,7 @@ $profileInitial = strtoupper(substr((string) $target['username'], 0, 1));
             <tbody>
                 <?php foreach ($postedArticles as $article): ?>
                     <tr>
-                        <td><a href="<?= e(url('detail.php?id=' . $article['id'])) ?>"><?= e($article['title']) ?></a></td>
+                        <td><a href="<?= e(url('detail/?id=' . $article['id'])) ?>"><?= e($article['title']) ?></a></td>
                         <td><?= e(format_price((float) $article['price'])) ?></td>
                         <td><?= e((string) $article['stock_quantity']) ?></td>
                         <td><?= e(date('d/m/Y H:i', strtotime($article['published_at']))) ?></td>

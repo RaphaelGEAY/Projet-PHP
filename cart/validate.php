@@ -151,7 +151,7 @@ if (is_post() && isset($_POST['confirm_order'])) {
             db()->commit();
             current_user(true);
             set_flash('success', 'Commande validée. Facture #' . $invoiceId . ' générée.');
-            redirect('account.php');
+            redirect('account/');
         } catch (Throwable $exception) {
             db()->rollBack();
             $error = $exception->getMessage();

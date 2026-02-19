@@ -7,13 +7,13 @@ require_login();
 
 if (!is_post()) {
     set_flash('error', 'La page édition doit être ouverte depuis un formulaire POST.');
-    redirect('index.php');
+    redirect('');
 }
 
 $articleId = post_int('article_id');
 if ($articleId <= 0) {
     set_flash('error', 'Article invalide.');
-    redirect('index.php');
+    redirect('');
 }
 
 $stmt = db()->prepare(
@@ -28,7 +28,7 @@ $article = $stmt->fetch();
 
 if (!$article) {
     set_flash('error', 'Article introuvable.');
-    redirect('index.php');
+    redirect('');
 }
 
 $user = current_user();
@@ -36,7 +36,7 @@ $canEdit = $user['role'] === 'admin' || (int) $user['id'] === (int) $article['au
 
 if (!$canEdit) {
     set_flash('error', 'Vous ne pouvez pas modifier cet article.');
-    redirect('detail.php?id=' . $articleId);
+    redirect('detail/?id=' . $articleId);
 }
 
 $error = null;
@@ -115,7 +115,7 @@ if (isset($_POST['update_article'])) {
             }
 
             set_flash('success', 'Article mis à jour.');
-            redirect('detail.php?id=' . $articleId);
+            redirect('detail/?id=' . $articleId);
         } catch (Throwable $exception) {
             db()->rollBack();
             if ($uploadedImagePath !== null) {
@@ -142,7 +142,7 @@ if (isset($_POST['delete_article'])) {
         db()->commit();
         delete_uploaded_car_image($imageToDelete);
         set_flash('success', 'Article supprimé.');
-        redirect('index.php');
+        redirect('');
     } catch (Throwable $exception) {
         db()->rollBack();
         $error = 'Erreur pendant la suppression: ' . $exception->getMessage();

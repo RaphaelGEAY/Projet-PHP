@@ -26,7 +26,7 @@ if (is_post()) {
 
                 db()->commit();
                 set_flash('success', 'Article supprimé par l\'administrateur.');
-                redirect('admin/index.php');
+                redirect('admin/');
             }
         }
 
@@ -57,7 +57,7 @@ if (is_post()) {
 
             db()->commit();
             set_flash('success', 'Article mis à jour.');
-            redirect('admin/index.php');
+            redirect('admin/');
         }
 
         if (isset($_POST['delete_user'])) {
@@ -98,7 +98,7 @@ if (is_post()) {
 
             db()->commit();
             set_flash('success', 'Utilisateur supprimé.');
-            redirect('admin/index.php');
+            redirect('admin/');
         }
 
         if (isset($_POST['update_user'])) {
@@ -148,7 +148,7 @@ if (is_post()) {
             }
 
             set_flash('success', 'Utilisateur mis à jour.');
-            redirect('admin/index.php');
+            redirect('admin/');
         }
     } catch (Throwable $exception) {
         if (db()->inTransaction()) {

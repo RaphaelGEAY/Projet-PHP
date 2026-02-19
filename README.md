@@ -1,94 +1,165 @@
 # VoitiBox - Projet final PHP E-Commerce
 
-Site e-commerce 100% PHP (sans framework backend) pour vendre/acheter des voitures, de l'entrée de gamme aux modèles de luxe.
+Application e-commerce 100% PHP natif (sans framework backend), développée pour le projet final du module PHP.
 
-## Fonctionnalités implémentées
+## Objectif
 
-- `register.php` : création de compte avec unicité `username` + `email` et connexion automatique.
-- `login.php` / `logout.php` : authentification.
-- `index.php` : home avec liste des annonces, tri et recherche.
-- `detail.php?id=...` : détail d'un article, ajout au panier.
-- `sell.php` : création d'article + stock.
-- `edit.php` : modification/suppression d'article (auteur ou admin uniquement, accès via `POST`).
-- `cart/index.php` : panier utilisateur (modifier quantité, supprimer, total).
-- `cart/validate.php` : confirmation commande, facturation, génération facture, vidage panier.
-- `account.php` / `account.php?user_id=...` :
-  - profil utilisateur,
-  - articles postés,
-  - achats et factures (pour son propre compte),
-  - modification infos + ajout de solde.
-- `admin/index.php` : tableau administrateur (gestion utilisateurs + articles).
+VoitiBox permet de:
+- créer un compte,
+- publier des voitures,
+- consulter les annonces,
+- gérer un panier,
+- valider une commande avec facturation,
+- administrer les utilisateurs et les annonces (rôle admin).
+
+## Stack technique
+
+- PHP 8+
+- MySQL / MariaDB
+- PDO
+- HTML/CSS
+- Aucune techno backend autre que PHP (conforme au sujet)
+
+## Structure des routes
+
+Routes principales disponibles:
+- `/` (Accueil)
+- `/login/`
+- `/register/`
+- `/sell/`
+- `/detail/?id=...`
+- `/cart/`
+- `/cart/validate/`
+- `/edit/` (accès en POST depuis un article)
+- `/account/` et `/account/?user_id=...`
+- `/admin/` (admin uniquement)
+- `/logout/`
+
+Compatibilité conservée: les fichiers historiques `*.php` existent toujours et restent fonctionnels.
+
+## Fonctionnalités couvertes (cahier des charges)
+
+- Authentification:
+  - inscription (`username` + `email` uniques),
+  - connexion,
+  - connexion automatique après inscription,
+  - mots de passe hashés en bcrypt.
+- Home:
+  - liste des annonces,
+  - plus récentes en premier,
+  - tri/recherche (bonus).
+- Vente (`/sell/`):
+  - création d'annonce,
+  - création du stock associé.
+- Détail (`/detail/`):
+  - affichage complet,
+  - ajout au panier avec quantité,
+  - contrôle du stock.
+- Panier (`/cart/`):
+  - affichage des lignes,
+  - modification quantité,
+  - suppression,
+  - total et contrôle du solde.
+- Confirmation (`/cart/validate/`):
+  - informations de facturation,
+  - validation si stock + solde OK,
+  - décrément du stock,
+  - génération facture,
+  - vidage panier.
+- Edition (`/edit/`):
+  - modif/suppression d'article,
+  - accès limité à l'auteur ou admin,
+  - entrée attendue en POST.
+- Compte (`/account/`):
+  - vue d'un autre utilisateur: infos + articles publiés,
+  - vue de son propre compte: achats, factures, modification profil, ajout de solde.
+- Administration (`/admin/`):
+  - accès admin uniquement,
+  - gestion utilisateurs (modifier/supprimer),
+  - gestion articles (modifier/supprimer).
+- Contrôle d'accès:
+  - non connecté: accès à Home + Detail seulement,
+  - autres pages: redirection vers `/login/`.
 
 ## Base de données
 
-Le fichier **obligatoire pour le rendu** est fourni :
-
+Le fichier SQL requis par le rendu est bien présent:
 - `php_exam_db.sql`
 
-Il contient :
-- schéma complet (`users`, `articles`, `cart`, `stock`, `invoice`, `invoice_items`),
-- contraintes d'intégrité,
-- données de démonstration (voitures pas chères à voiture à `1 000 000 000 €`).
+Contenu du SQL:
+- création de la DB `php_exam_db`,
+- tables: `users`, `articles`, `cart`, `stock`, `invoice`, `invoice_items`,
+- contraintes d'intégrité (FK, unicité),
+- données de démonstration (utilisateurs + annonces + stocks).
 
-## Installation rapide (XAMPP/LAMP)
+Remarque importante:
+- les chemins d'images seedés dans `php_exam_db.sql` pointent vers des fichiers réellement présents dans le dépôt (`assets/images/cars/...`, `assets/images/profiles/...`).
 
-1. Placer le dossier dans `htdocs/php_exam` (ou `/var/www/html/php_exam`).
-2. Créer la base via phpMyAdmin en important `php_exam_db.sql`.
-3. Vérifier la connexion DB dans `db.php`.
+## Installation locale (XAMPP/LAMP/MAMP)
 
-Configuration par défaut dans `db.php` :
+1. Placer le projet dans:
+- XAMPP: `htdocs/php_exam`
+- LAMP (Linux): `/var/www/html/php_exam`
+- MAMP: dossier web MAMP
 
-- host: `127.0.0.1`
-- db: `php_exam_db`
-- user: `root`
-- pass: `root`
+2. Démarrer Apache + MySQL.
 
-Vous pouvez aussi utiliser des variables d'environnement :
-- `DB_HOST`
-- `DB_NAME`
-- `DB_USER`
-- `DB_PASS`
+3. Créer/importer la base:
+- ouvrir phpMyAdmin,
+- créer ou sélectionner `php_exam_db`,
+- importer `php_exam_db.sql`.
 
-## Utiliser vos propres images
+4. Vérifier la config DB (`db.php`):
+- `DB_HOST` (défaut: `127.0.0.1`)
+- `DB_NAME` (défaut: `php_exam_db`)
+- `DB_USER` (défaut: `root`)
+- `DB_PASS` (défaut: `root`)
 
-Le projet accepte maintenant :
-- uniquement des chemins locaux dans le projet (`assets/images/ma-voiture.jpg`)
+5. Accéder à l'application:
+- `http://localhost/php_exam/`
+- MAMP (port par défaut): `http://localhost:8888/php_exam/`
 
-Workflow recommandé :
-1. Copier vos fichiers image dans `assets/images/`.
-2. Depuis `sell.php`, `edit.php` ou `account.php`, utilisez le champ fichier pour envoyer l'image (JPG/PNG/WEBP/GIF, max 5 Mo).
-3. Ouvrir le site et vérifier l'affichage (les fichiers manquants ou à `0` octet ne sont pas affichés).
-
-Pour remplacer rapidement les images de démo déjà en base :
-
-```sql
-UPDATE articles SET image_url = 'assets/images/clio.jpg' WHERE id = 1;
-UPDATE users SET profile_photo = 'assets/images/profil-admin.jpg' WHERE id = 1;
-```
-
-## Comptes de démonstration
+## Comptes de démo
 
 - Admin
   - email: `admin@voitibox.local`
   - mot de passe: `admin123`
 
-- Utilisateur
+- Utilisateur vendeur
   - email: `seller@voitibox.local`
   - mot de passe: `user1234`
 
-- Utilisateur
+- Utilisateur acheteur
   - email: `buyer@voitibox.local`
   - mot de passe: `user1234`
 
-## Arborescence principale
+## Arborescence utile
 
-- `includes/bootstrap.php` : chargement session + dépendances
-- `includes/helpers.php` : fonctions utilitaires (auth, redirect, format, etc.)
-- `includes/layout.php` : header/footer communs
-- `assets/style.css` : style global
+- `includes/bootstrap.php`: init session + chargement global
+- `includes/helpers.php`: helpers auth, redirections, utilitaires
+- `includes/layout.php`: layout partagé
+- `cart/index.php`: page panier
+- `cart/validate.php`: validation de commande
+- `admin/index.php`: back-office admin
+- `php_exam_db.sql`: script SQL de rendu
 
-## Notes
+## Vérifications recommandées avant rendu
 
-- Backend uniquement en PHP natif.
-- Les pages protégées redirigent vers la connexion si nécessaire.
-- Les mots de passe sont hashés en bcrypt.
+1. Importer `php_exam_db.sql` sur un environnement propre.
+2. Tester les routes:
+- `/`, `/login/`, `/register/`, `/sell/`, `/detail/?id=1`, `/cart/`, `/cart/validate/`, `/account/`, `/admin/`.
+3. Vérifier qu'un utilisateur non connecté est redirigé vers `/login/` sur les pages protégées.
+4. Vérifier le flux complet:
+- inscription -> connexion auto,
+- création annonce,
+- ajout panier,
+- validation commande,
+- facture visible dans `/account/`.
+5. Vérifier le compte admin sur `/admin/`.
+
+## Conformité rendu
+
+- Projet versionné Git.
+- README explicatif présent.
+- `php_exam_db.sql` présent (exigence explicite du sujet, sinon malus).
+

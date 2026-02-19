@@ -6,7 +6,7 @@ require_once __DIR__ . '/includes/bootstrap.php';
 $articleId = (int) ($_GET['id'] ?? 0);
 if ($articleId <= 0) {
     set_flash('error', 'Article invalide.');
-    redirect('index.php');
+    redirect('');
 }
 
 $stmt = db()->prepare(
@@ -21,7 +21,7 @@ $article = $stmt->fetch();
 
 if (!$article) {
     set_flash('error', 'Article introuvable.');
-    redirect('index.php');
+    redirect('');
 }
 
 if (is_post() && isset($_POST['add_to_cart'])) {
@@ -32,7 +32,7 @@ if (is_post() && isset($_POST['add_to_cart'])) {
 
     if ($stock <= 0) {
         set_flash('error', 'Cet article est en rupture de stock.');
-        redirect('detail.php?id=' . $articleId);
+        redirect('detail/?id=' . $articleId);
     }
 
     $cartStmt = db()->prepare('SELECT id, quantity FROM cart WHERE user_id = :user_id AND article_id = :article_id LIMIT 1');
@@ -49,7 +49,7 @@ if (is_post() && isset($_POST['add_to_cart'])) {
 
     if ($newQty > $stock) {
         set_flash('error', 'Quantité demandée supérieure au stock disponible.');
-        redirect('detail.php?id=' . $articleId);
+        redirect('detail/?id=' . $articleId);
     }
 
     if ($existing) {
@@ -110,14 +110,14 @@ render_header('Détail article');
 <?php else: ?>
     <div class="card">
         <p>Connectez-vous pour ajouter cet article au panier.</p>
-        <a class="btn" href="<?= e(url('login.php')) ?>">Se connecter</a>
+        <a class="btn" href="<?= e(url('login/')) ?>">Se connecter</a>
     </div>
 <?php endif; ?>
 
 <?php if ($canEdit): ?>
     <div class="form-card">
         <h2>Gestion de votre article</h2>
-        <form method="post" action="<?= e(url('edit.php')) ?>">
+        <form method="post" action="<?= e(url('edit/')) ?>">
             <input type="hidden" name="article_id" value="<?= e((string) $article['id']) ?>">
             <button type="submit" name="open_edit" value="1">Modifier / Supprimer</button>
         </form>
